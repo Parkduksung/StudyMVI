@@ -37,7 +37,7 @@ android {
     }
 
     buildFeatures {
-        dataBinding true
+        compose true
     }
 
     lintOptions {
@@ -46,6 +46,10 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+
+     composeOptions {
+            kotlinCompilerExtensionVersion '1.1.1'
+        }
 
     packagingOptions {
         exclude 'META-INF/*'
@@ -56,15 +60,21 @@ dependencies {
 
     ext {
         coroutines_Version = '1.5.2'
+        compose_version = '1.1.1'
     }
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.+'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     //coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_Version"
@@ -75,29 +85,4 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
-    // -- Lifecycle Components (ViewModel, LiveData and ReactiveStreams)
-    def lifecycle_version = "2.2.0-alpha03"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-
-    // -- Coroutines
-    def coroutines_version = "1.2.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
-    // RecyclerView
-    def recyclerview_version = "1.1.0-beta03"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-
-    def material_version = "1.1.0-alpha09"
-    implementation "com.google.android.material:material:$material_version"
-
-    //glide
-    def glide_version = "4.9.0"
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-
-    // Leak Canary (detecting memory leaks)
-    def leak_canary_version = "2.0-alpha-3"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
 }
