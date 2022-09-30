@@ -11,37 +11,53 @@ import java.util.*
 
 class MainViewModel : ViewModel() {
 
-    var state by mutableStateOf(MainViewState())
+    var state by mutableStateOf(UiState())
         private set
 
     private val _uiStateMediator = MutableLiveData<UiState>()
     val uiStateMediator = _uiStateMediator.switchMap { state ->
         liveData {
-            when (state) {
-                is UiState.SubUiState1 -> emit(emit1(state))
-                is UiState.SubUiState2 -> emit(emit2(state))
-            }
+            state.subUiState1?.let { emit(emit1(it)) }
+            state.subUiState2?.let { emit(emit2(it)) }
         }
     }
 
     fun clickButton() {
         viewModelScope.launch {
-            _uiStateMediator.value = UiState.SubUiState1(Random().nextInt(100).toString())
-            _uiStateMediator.value = UiState.SubUiState2(Random().nextInt(100).toString())
+            _uiStateMediator.value =
+                UiState(subUiState1 = SubUiState1.Sub1(Random().nextInt(100).toString()))
+            _uiStateMediator.value =
+                UiState(subUiState2 = SubUiState2.Sub2(Random().nextInt(100).toString()))
         }
     }
 
-    private fun emit1(item: UiState.SubUiState1) {
-        Log.d("결과1", item.data)
+    private fun emit1(item: SubUiState1) {
+        Log.d("결과1", (item as SubUiState1.Sub1).data)
     }
 
-    private fun emit2(item: UiState.SubUiState2) {
-        Log.d("결과2", item.data)
+    private fun emit2(item: SubUiState2?) {
+        Log.d("결과1", (item as SubUiState2.Sub2).data)
     }
 
 }
 
-sealed class UiState {
-    data class SubUiState1(val data: String) : UiState()
-    data class SubUiState2(val data: String) : UiState()
+
+
+data class UiState(
+    var commonState: CommonState? = null,
+    var subUiState1: SubUiState1? = null,
+    var subUiState2: SubUiState2? = null
+)
+
+sealed class CommonState {
+    data class LoadingState(val isShow: Boolean)
 }
+
+sealed class SubUiState1 {
+    data class Sub1(val data: String) : SubUiState1()
+}
+
+sealed class SubUiState2 {
+    data class Sub2(val data: String) : SubUiState2()
+}
+
