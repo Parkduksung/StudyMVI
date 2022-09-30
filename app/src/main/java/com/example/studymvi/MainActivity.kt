@@ -14,13 +14,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            mainViewModel.result1.observe(this){
+            mainViewModel.uiStateMediator.observe(this) {}
 
-            }
-
-            mainViewModel.result2.observe(this){
-
-            }
             Button(
                 onClick = {
                     mainViewModel.clickButton()
