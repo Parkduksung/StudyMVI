@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material.Button
 
 class MainActivity : ComponentActivity() {
 
@@ -13,6 +14,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
+            mainViewModel.result1.observe(this){
+
+            }
+
+            mainViewModel.result2.observe(this){
+
+            }
+            Button(
+                onClick = {
+                    mainViewModel.clickButton()
+                }) {
+            }
         }
     }
 }
