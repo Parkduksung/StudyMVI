@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.example.studymvi"
         minSdk 23
-        targetSdk 31
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -48,7 +48,7 @@ android {
     }
 
      composeOptions {
-            kotlinCompilerExtensionVersion '1.1.1'
+            kotlinCompilerExtensionVersion '1.3.1'
         }
 
     packagingOptions {
@@ -60,7 +60,7 @@ dependencies {
 
     ext {
         coroutines_Version = '1.5.2'
-        compose_version = '1.1.1'
+        compose_version = '1.2.0'
     }
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -81,7 +81,7 @@ dependencies {
 
 
     // -- Retrofit2
-    def retrofit2_version = "2.6.0"
+    def retrofit2_version = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
