@@ -1,26 +1,30 @@
 package com.example.studymvi
 
-import androidx.lifecycle.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import java.util.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val sampleRepository: SampleRepository) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
-    val uiState : StateFlow<UiState> = _uiState
 
-    fun clickButton() {
-        viewModelScope.launch {
-            _uiState.value =UiState.GetString(data = Random().nextInt(100).toString())
-        }
-    }
+    private val getData: Flow<String> = sampleRepository.getData()
+
+    //버튼을 누루지 않고 처음 시작할때 1초뒤에 결과값 얻는 방법.
+    val result = getData.transformLatest {
+        delay(1000L)
+        emit(UiState.GetString(it))
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileSubscribed(5000),
+        initialValue = UiState.Loading
+    )
 }
 
 sealed class UiState {
-    data class GetString(val data : String) : UiState()
+    data class GetString(val data: String) : UiState()
     object Loading : UiState()
 }
 
