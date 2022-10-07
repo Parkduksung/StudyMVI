@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -89,4 +89,36 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
 
+    // Room
+    implementation "androidx.room:room-runtime:2.3.0"
+    implementation "androidx.room:room-ktx:2.3.0"
+    kapt "androidx.room:room-compiler:2.3.0"
+    kapt "org.xerial:sqlite-jdbc:3.34.0"
+
+
+}
+
+dependencies {
+    def nav_version = "2.5.2"
+
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+}
+
+dependencies {
+  implementation 'com.google.dagger:hilt-android:2.44'
+  kapt 'com.google.dagger:hilt-compiler:2.44'
+
+  // For instrumentation tests
+  androidTestImplementation  'com.google.dagger:hilt-android-testing:2.44'
+  kaptAndroidTest 'com.google.dagger:hilt-compiler:2.44'
+
+  // For local unit tests
+  testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+  kaptTest 'com.google.dagger:hilt-compiler:2.44'
+
+  implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+}
+
+kapt {
+ correctErrorTypes true
 }
