@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.example.studymvi.data.model.TextItem
+import com.example.studymvi.room.entity.TextEntity
 
 @Composable
 fun TextScreen(
-    item: String,
-    onItemClick: (String) -> Unit
+    item: TextEntity,
+    onItemClick: (TextEntity) -> Unit
 ) {
     Log.d("결과", "TextScreen")
     Column(
@@ -28,7 +30,7 @@ fun TextScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = item)
+        Text(text = item.text)
     }
 }
 
