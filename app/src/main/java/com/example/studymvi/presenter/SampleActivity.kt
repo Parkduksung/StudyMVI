@@ -1,6 +1,7 @@
 package com.example.studymvi.presenter
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.studymvi.presenter.text_list.TextListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,8 +23,11 @@ class SampleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            Log.d("결과", "SampleActivity")
             Column() {
+                Log.d("결과", "SampleActivity Column")
                 SampleBox()
+                TextListScreen()
             }
         }
     }
@@ -34,6 +39,7 @@ fun SampleBox(
     viewModel: SampleViewModel = hiltViewModel()
 ) {
 
+    Log.d("결과", "SampleBox")
     val input = viewModel.inputState.value
 
     Column {
