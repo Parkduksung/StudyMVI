@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +62,8 @@ class SampleViewModel @Inject constructor(private val textRepository: TextReposi
     fun insertTextItem() {
         if (_inputState.value.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val textItem = TextEntity(text = _inputState.value)
+                val textItem =
+                    TextEntity(text = _inputState.value, date = Calendar.getInstance().timeInMillis)
 
                 if (textRepository.insertTextItem(textItem)) {
 

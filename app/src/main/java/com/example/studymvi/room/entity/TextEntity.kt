@@ -3,11 +3,10 @@ package com.example.studymvi.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "text_table")
 data class TextEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "text") val text: String,
-    @ColumnInfo(name = "date") val date: Long = Calendar.getInstance().timeInMillis
+    @ColumnInfo(name = "date") val date: Long
 )
