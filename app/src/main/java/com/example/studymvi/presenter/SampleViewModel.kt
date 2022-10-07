@@ -4,15 +4,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studymvi.data.model.TextItem
 import com.example.studymvi.data.repo.TextRepository
 import com.example.studymvi.room.entity.TextEntity
+import com.example.studymvi.util.Result
+import com.example.studymvi.util.asResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +21,38 @@ class SampleViewModel @Inject constructor(private val textRepository: TextReposi
     private val _inputState = mutableStateOf("")
     val inputState: State<String> = _inputState
 
-    val texts = textRepository.getTextEntityList().asResult()
+    private val textsStream: Flow<Result<List<TextEntity>>> =
+        textRepository.getTextEntityList().asResult()
+
+    private val totalTextCountStream: Flow<Result<Int>> =
+        textRepository.getTotalTextCount().asResult()
+
+
+    val uiState: StateFlow<TextListScreenUiState> =
+        combine(textsStream, totalTextCountStream) { textsResult, totalCountResult ->
+            val texts: TextUiState =
+                if (textsResult is Result.Success && totalCountResult is Result.Success) {
+                    TextUiState.Success(textsResult.data)
+                } else if (textsResult is Result.Loading || totalCountResult is Result.Loading) {
+                    TextUiState.Loading
+                } else {
+                    TextUiState.Error
+                }
+
+            val totalCount: TotalTextCountUiState =
+                when (totalCountResult) {
+                    is Result.Success -> TotalTextCountUiState.Success(totalCountResult.data)
+                    is Result.Loading -> TotalTextCountUiState.Loading
+                    is Result.Error -> TotalTextCountUiState.Error
+                }
+
+            TextListScreenUiState(texts, totalCount)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = TextListScreenUiState(TextUiState.Loading, TotalTextCountUiState.Loading)
+        )
+
 
     fun onInputChange(input: String) {
         _inputState.value = input
@@ -32,7 +61,7 @@ class SampleViewModel @Inject constructor(private val textRepository: TextReposi
     fun insertTextItem() {
         if (_inputState.value.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val textItem = TextItem(text = _inputState.value).toTextEntity()
+                val textItem = TextEntity(text = _inputState.value)
 
                 if (textRepository.insertTextItem(textItem)) {
 
@@ -54,17 +83,20 @@ class SampleViewModel @Inject constructor(private val textRepository: TextReposi
     }
 }
 
-sealed interface Result<out T> {
-    data class Success<T>(val data: T) : Result<T>
-    data class Error(val exception: Throwable? = null) : Result<Nothing>
-    object Loading : Result<Nothing>
+sealed interface TextUiState {
+    data class Success(val texts: List<TextEntity>) : TextUiState
+    object Error : TextUiState
+    object Loading : TextUiState
 }
 
-fun <T> Flow<T>.asResult(): Flow<Result<T>> {
-    return this
-        .map<T, Result<T>> {
-            Result.Success(it)
-        }
-        .onStart { emit(Result.Loading) }
-        .catch { emit(Result.Error(it)) }
+sealed interface TotalTextCountUiState {
+    data class Success(val totalCount: Int) : TotalTextCountUiState
+    object Error : TotalTextCountUiState
+    object Loading : TotalTextCountUiState
 }
+
+
+data class TextListScreenUiState(
+    val textUiState: TextUiState,
+    val totalTextCountUiState: TotalTextCountUiState
+)

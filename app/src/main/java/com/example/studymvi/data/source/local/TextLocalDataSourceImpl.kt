@@ -3,6 +3,7 @@ package com.example.studymvi.data.source.local
 import com.example.studymvi.room.dao.TextDao
 import com.example.studymvi.room.entity.TextEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TextLocalDataSourceImpl @Inject constructor(private val textDao: TextDao) :
