@@ -16,16 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.studymvi.presenter.SampleViewModel
-import com.example.studymvi.presenter.TextUiState
-import com.example.studymvi.presenter.TotalTextCountUiState
 import com.example.studymvi.presenter.text_list.component.TextScreen
 import com.example.studymvi.room.entity.TextEntity
 
 
 @Composable
 fun SampleScreen(
-    viewModel: SampleViewModel = hiltViewModel()
+    viewModel: TextListViewModel = hiltViewModel()
 ) {
 
     val uiState = viewModel.uiState.collectAsState()
@@ -39,7 +36,7 @@ fun SampleScreen(
 
 @Composable
 fun InputText(
-    viewModel: SampleViewModel = hiltViewModel(),
+    viewModel: TextListViewModel = hiltViewModel(),
     totalTextCountUiState: TotalTextCountUiState
 ) {
 
@@ -96,7 +93,7 @@ fun InputText(
 
 @Composable
 fun TextListScreen(
-    viewModel: SampleViewModel = hiltViewModel(),
+    viewModel: TextListViewModel = hiltViewModel(),
     textUiState: TextUiState
 ) {
 

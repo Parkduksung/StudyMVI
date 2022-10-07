@@ -1,4 +1,4 @@
-package com.example.studymvi.presenter
+package com.example.studymvi.presenter.text_list
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +16,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SampleViewModel @Inject constructor(private val textRepository: TextRepository) :
+class TextListViewModel @Inject constructor(private val textRepository: TextRepository) :
     ViewModel() {
 
     private val _inputState = mutableStateOf("")
