@@ -1,7 +1,5 @@
 package com.example.core_data.di
 
-import com.example.core_data.local.TextLocalDataSource
-import com.example.core_data.local.TextLocalDataSourceImpl
 import com.example.core_data.repo.TextRepository
 import com.example.core_data.repo.TextRepositoryImpl
 import dagger.Binds
@@ -19,11 +17,5 @@ interface DataModule {
     fun bindsTextRepository(
         textRepositoryImpl: TextRepositoryImpl
     ): TextRepository
-
-    @Singleton
-    @Binds
-    fun bindsTextLocalDataSource(
-        textLocalDataSourceImpl: TextLocalDataSourceImpl
-    ): TextLocalDataSource
 
 }

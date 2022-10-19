@@ -1,25 +1,33 @@
 package com.example.core_data.repo
 
-import com.example.core_data.local.TextLocalDataSource
+import com.example.core_database.room.dao.TextDao
 import com.example.core_database.room.entity.TextEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class TextRepositoryImpl @Inject constructor(private val textLocalDataSource: TextLocalDataSource) :
+class TextRepositoryImpl @Inject constructor(private val textDao: TextDao) :
     TextRepository {
 
-    //repo
     override fun getTotalTextCount(): Flow<Int> =
-        textLocalDataSource.getTextEntityList().map { it.size }
+        textDao.getAllTexts().map { it.size }
 
-    //local source
     override suspend fun insertTextItem(item: TextEntity): Boolean =
-        textLocalDataSource.insertTextItem(item)
+        try {
+            val result = textDao.insertText(item)
+            result > 0
+        } catch (e: Exception) {
+            false
+        }
 
     override suspend fun deleteTextItem(item: TextEntity): Boolean =
-        textLocalDataSource.deleteTextItem(item)
+        try {
+            val result = textDao.deleteText(item)
+            result >= 0
+        } catch (e: Exception) {
+            false
+        }
 
     override fun getTextEntityList(): Flow<List<TextEntity>> =
-        textLocalDataSource.getTextEntityList()
+        textDao.getAllTexts()
 }
