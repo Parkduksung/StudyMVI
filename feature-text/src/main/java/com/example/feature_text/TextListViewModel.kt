@@ -23,10 +23,10 @@ class TextListViewModel @Inject constructor(private val textRepository: TextRepo
     val inputState: State<String> = _inputState
 
     private val textsStream: Flow<Result<List<TextEntity>>> =
-        textRepository.getTextEntityList().asResult()
+        textRepository.textEntityList.asResult()
 
     private val totalTextCountStream: Flow<Result<Int>> =
-        textRepository.getTotalTextCount().asResult()
+        textRepository.totalTextCount.asResult()
 
 
     val uiState: StateFlow<TextListScreenUiState> =

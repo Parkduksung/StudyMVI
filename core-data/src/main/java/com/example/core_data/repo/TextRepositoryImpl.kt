@@ -9,8 +9,12 @@ import javax.inject.Inject
 class TextRepositoryImpl @Inject constructor(private val textDao: TextDao) :
     TextRepository {
 
-    override fun getTotalTextCount(): Flow<Int> =
-        textDao.getAllTexts().map { it.size }
+
+    override val totalTextCount: Flow<Int>
+        get() = textDao.getAllTexts().map { it.size }
+
+    override val textEntityList: Flow<List<TextEntity>>
+        get() = textDao.getAllTexts()
 
     override suspend fun insertTextItem(item: TextEntity): Boolean =
         try {
@@ -28,6 +32,4 @@ class TextRepositoryImpl @Inject constructor(private val textDao: TextDao) :
             false
         }
 
-    override fun getTextEntityList(): Flow<List<TextEntity>> =
-        textDao.getAllTexts()
 }
