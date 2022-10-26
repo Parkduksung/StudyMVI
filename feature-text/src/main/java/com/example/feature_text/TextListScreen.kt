@@ -29,9 +29,9 @@ fun SampleScreen(
 
     Column(Modifier.fillMaxSize()) {
         InputText(totalTextCountUiState = uiState.value.totalTextCountUiState)
+        TestPreferencesScreen(testPreferenceUiState = uiState.value.TestPreferenceUiState)
         TextListScreen(textUiState = uiState.value.textUiState)
     }
-
 }
 
 @Composable
@@ -81,6 +81,7 @@ fun InputText(
             keyboardActions = KeyboardActions(
                 onSend = {
                     viewModel.insertTextItem()
+                    viewModel.updateTestPreferences()
                 }
             ),
             modifier = Modifier
@@ -88,6 +89,25 @@ fun InputText(
                 .fillMaxWidth()
         )
     }
+}
+
+@Composable
+fun TestPreferencesScreen(
+    testPreferenceUiState: TestPreferenceUiState
+) {
+
+    when (testPreferenceUiState) {
+        TestPreferenceUiState.Error -> TODO()
+        TestPreferenceUiState.Loading -> {}
+        is TestPreferenceUiState.Success -> {
+            Text(
+                text = "SavePreferences : ${testPreferenceUiState.text}",
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
+
+
 }
 
 

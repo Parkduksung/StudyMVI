@@ -28,9 +28,16 @@ class TextListViewModel @Inject constructor(private val textRepository: TextRepo
     private val totalTextCountStream: Flow<Result<Int>> =
         textRepository.totalTextCount.asResult()
 
+    private val testTextPreferences: Flow<Result<String>> =
+        textRepository.testTextPreferences.asResult()
+
 
     val uiState: StateFlow<TextListScreenUiState> =
-        combine(textsStream, totalTextCountStream) { textsResult, totalCountResult ->
+        combine(
+            textsStream,
+            totalTextCountStream,
+            testTextPreferences
+        ) { textsResult, totalCountResult, testTextPreferencesResult ->
             val texts: TextUiState =
                 if (textsResult is Result.Success && totalCountResult is Result.Success) {
                     TextUiState.Success(textsResult.data)
@@ -47,11 +54,22 @@ class TextListViewModel @Inject constructor(private val textRepository: TextRepo
                     is Result.Error -> TotalTextCountUiState.Error
                 }
 
-            TextListScreenUiState(texts, totalCount)
+            val testTextPreferences: TestPreferenceUiState =
+                when (testTextPreferencesResult) {
+                    is Result.Success -> TestPreferenceUiState.Success(testTextPreferencesResult.data)
+                    is Result.Loading -> TestPreferenceUiState.Loading
+                    is Result.Error -> TestPreferenceUiState.Error
+                }
+
+            TextListScreenUiState(texts, totalCount, testTextPreferences)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = TextListScreenUiState(TextUiState.Loading, TotalTextCountUiState.Loading)
+            initialValue = TextListScreenUiState(
+                TextUiState.Loading,
+                TotalTextCountUiState.Loading,
+                TestPreferenceUiState.Loading
+            )
         )
 
 
@@ -70,6 +88,14 @@ class TextListViewModel @Inject constructor(private val textRepository: TextRepo
                 } else {
 
                 }
+            }
+        }
+    }
+
+    fun updateTestPreferences() {
+        if (_inputState.value.isNotEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                textRepository.updateTestString(_inputState.value)
             }
         }
     }
@@ -97,8 +123,15 @@ sealed interface TotalTextCountUiState {
     object Loading : TotalTextCountUiState
 }
 
+sealed interface TestPreferenceUiState {
+    data class Success(val text: String) : TestPreferenceUiState
+    object Error : TestPreferenceUiState
+    object Loading : TestPreferenceUiState
+}
+
 
 data class TextListScreenUiState(
     val textUiState: TextUiState,
-    val totalTextCountUiState: TotalTextCountUiState
+    val totalTextCountUiState: TotalTextCountUiState,
+    val TestPreferenceUiState: TestPreferenceUiState
 )

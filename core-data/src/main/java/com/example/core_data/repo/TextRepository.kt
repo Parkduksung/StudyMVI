@@ -9,8 +9,13 @@ interface TextRepository {
 
     val textEntityList: Flow<List<TextEntity>>
 
+    val testTextPreferences : Flow<String>
+
     suspend fun insertTextItem(item: TextEntity): Boolean
 
     suspend fun deleteTextItem(item: TextEntity): Boolean
+
+
+    suspend fun updateTestString(text: String)
 
 }

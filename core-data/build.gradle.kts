@@ -36,6 +36,7 @@ android {
 dependencies {
 
     implementation(project(":core-database"))
+    implementation(project(":core-datastore"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.kotlinx.coroutines.android)
