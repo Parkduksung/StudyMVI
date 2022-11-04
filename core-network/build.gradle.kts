@@ -34,16 +34,16 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":core-network"))
-    implementation(project(":core-database"))
-    implementation(project(":core-datastore"))
     implementation(project(":core-model"))
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.kotlinx.coroutines.android)
-    testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-
     implementation(libs.retrofit.moshi)
+//    implementation(libs.moshi.codegen)
+
+    implementation("com.squareup.moshi:moshi-kotlin:1.12.0",)
+    implementation("com.squareup.moshi:moshi-kotlin-codegen:1.12.0",)
+
 }

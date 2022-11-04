@@ -39,11 +39,15 @@ android {
 }
 
 dependencies {
+
     implementation(project(":core-data"))
     implementation(project(":core-common"))
     implementation(project(":core-database"))
     implementation(project(":core-datastore"))
+    implementation(project(":core-network"))
+
     implementation(project(":core-ui"))
+    implementation(project(":core-model"))
 
 
     implementation(libs.androidx.activity.compose)

@@ -66,6 +66,7 @@ android {
 dependencies {
 
     implementation(project(":core-ui"))
+    implementation(project(":core-model"))
     implementation(project(":feature-text"))
 
     implementation(libs.androidx.core.ktx)
@@ -102,4 +103,7 @@ dependencies {
 
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+
+    implementation("com.squareup.moshi:moshi-kotlin:1.12.0",)
+    implementation("com.squareup.moshi:moshi-kotlin-codegen:1.12.0",)
 }

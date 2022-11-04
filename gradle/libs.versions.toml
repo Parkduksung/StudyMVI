@@ -18,6 +18,11 @@ kotlin = "1.7.10"
 ksp = "1.7.10-1.0.6"
 datastore = "1.0.0"
 datastorCore = "1.0.0"
+retrofit = "2.9.0"
+retrofitMoshi = "2.9.0"
+gson = "2.8.5"
+moshi = "1.12.0"
+moshiCodegen = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -47,6 +52,11 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorCore" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit_moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofitMoshi" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+moshi = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+moshi_codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiCodegen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

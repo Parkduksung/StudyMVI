@@ -1,5 +1,6 @@
 package com.example.feature_text
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -14,9 +15,12 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import com.example.core_common.Result
+import com.example.core_data.repo.ChampionRepository
 
 @HiltViewModel
-class TextListViewModel @Inject constructor(private val textRepository: TextRepository) :
+class TextListViewModel @Inject constructor(
+    private val textRepository: TextRepository, private val championRepository: ChampionRepository
+) :
     ViewModel() {
 
     private val _inputState = mutableStateOf("")
@@ -78,17 +82,35 @@ class TextListViewModel @Inject constructor(private val textRepository: TextRepo
     }
 
     fun insertTextItem() {
-        if (_inputState.value.isNotEmpty()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val textItem =
-                    TextEntity(text = _inputState.value, date = Calendar.getInstance().timeInMillis)
+//        if (_inputState.value.isNotEmpty()) {
+//            viewModelScope.launch(Dispatchers.IO) {
+//                val textItem =
+//                    TextEntity(text = _inputState.value, date = Calendar.getInstance().timeInMillis)
+//
+//                if (textRepository.insertTextItem(textItem)) {
+//
+//                } else {
+//
+//                }
+//            }
+//        }
 
-                if (textRepository.insertTextItem(textItem)) {
+        viewModelScope.launch(Dispatchers.IO) {
 
-                } else {
+            championRepository.getAllChampions().asResult().onEach { result ->
 
+                when (result) {
+                    is Result.Error -> {
+                        Log.d("결과", result.exception.toString())
+                    }
+                    Result.Loading -> {
+                        Log.d("결과", "Loading")
+                    }
+                    is Result.Success -> {
+                        Log.d("결과", result.data.toString())
+                    }
                 }
-            }
+            }.launchIn(this)
         }
     }
 

@@ -2,7 +2,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -17,33 +16,39 @@ android {
     }
 
     buildFeatures {
+        compose = true
         aidl = false
         buildConfig = false
         renderScript = false
         shaders = false
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
 
 dependencies {
+//    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.ktx)
 
-    implementation(project(":core-network"))
-    implementation(project(":core-database"))
-    implementation(project(":core-datastore"))
-    implementation(project(":core-model"))
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.kotlinx.coroutines.android)
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
 
-    implementation(libs.retrofit.moshi)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
+//    implementation(libs.kotlinx.coroutines.android)
+//    testImplementation(libs.kotlinx.coroutines.test)
+
+    implementation("com.squareup.moshi:moshi-kotlin:1.12.0",)
+    implementation("com.squareup.moshi:moshi-kotlin-codegen:1.12.0",)
 }

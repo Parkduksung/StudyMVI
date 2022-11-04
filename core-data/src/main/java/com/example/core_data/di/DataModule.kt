@@ -1,5 +1,7 @@
 package com.example.core_data.di
 
+import com.example.core_data.repo.ChampionRepository
+import com.example.core_data.repo.ChampionRepositoryImpl
 import com.example.core_data.repo.TextRepository
 import com.example.core_data.repo.TextRepositoryImpl
 import dagger.Binds
@@ -18,4 +20,9 @@ interface DataModule {
         textRepositoryImpl: TextRepositoryImpl
     ): TextRepository
 
+    @Singleton
+    @Binds
+    fun bindChampionRepository(
+        championRepositoryImpl: ChampionRepositoryImpl
+    ): ChampionRepository
 }
