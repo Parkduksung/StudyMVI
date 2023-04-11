@@ -75,7 +75,7 @@ class TextListViewModel @Inject constructor(
         }
     }
 
-    fun removeTextItem(item: TextEntity) {
+    private fun removeTextItem(item: TextEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             if (textRepository.deleteTextItem(item)) {
 
