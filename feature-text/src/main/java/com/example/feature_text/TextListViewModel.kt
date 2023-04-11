@@ -1,11 +1,7 @@
 package com.example.feature_text
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core_common.asResult
 import com.example.core_data.repo.TextRepository
 import com.example.core_database.room.entity.TextEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,111 +10,68 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import com.example.core_common.Result
-import com.example.core_data.repo.ChampionRepository
 
 @HiltViewModel
 class TextListViewModel @Inject constructor(
-    private val textRepository: TextRepository, private val championRepository: ChampionRepository
+    private val textRepository: TextRepository
 ) :
-    ViewModel() {
+    ViewModel(), TextListContract {
 
-    private val _inputState = mutableStateOf("")
-    val inputState: State<String> = _inputState
+    private val textsStream: Flow<List<TextEntity>> =
+        textRepository.textEntityList
 
-    private val textsStream: Flow<Result<List<TextEntity>>> =
-        textRepository.textEntityList.asResult()
+    private val totalTextCountStream: Flow<Int> =
+        textRepository.totalTextCount
 
-    private val totalTextCountStream: Flow<Result<Int>> =
-        textRepository.totalTextCount.asResult()
-
-    private val testTextPreferences: Flow<Result<String>> =
-        textRepository.testTextPreferences.asResult()
+    private val testTextPreferences: Flow<String> =
+        textRepository.testTextPreferences
 
 
-    val uiState: StateFlow<TextListScreenUiState> =
-        combine(
-            textsStream,
-            totalTextCountStream,
-            testTextPreferences
-        ) { textsResult, totalCountResult, testTextPreferencesResult ->
-            val texts: TextUiState =
-                if (textsResult is Result.Success && totalCountResult is Result.Success) {
-                    TextUiState.Success(textsResult.data)
-                } else if (textsResult is Result.Loading || totalCountResult is Result.Loading) {
-                    TextUiState.Loading
-                } else {
-                    TextUiState.Error
-                }
-
-            val totalCount: TotalTextCountUiState =
-                when (totalCountResult) {
-                    is Result.Success -> TotalTextCountUiState.Success(totalCountResult.data)
-                    is Result.Loading -> TotalTextCountUiState.Loading
-                    is Result.Error -> TotalTextCountUiState.Error
-                }
-
-            val testTextPreferences: TestPreferenceUiState =
-                when (testTextPreferencesResult) {
-                    is Result.Success -> TestPreferenceUiState.Success(testTextPreferencesResult.data)
-                    is Result.Loading -> TestPreferenceUiState.Loading
-                    is Result.Error -> TestPreferenceUiState.Error
-                }
-
-            TextListScreenUiState(texts, totalCount, testTextPreferences)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = TextListScreenUiState(
-                TextUiState.Loading,
-                TotalTextCountUiState.Loading,
-                TestPreferenceUiState.Loading
-            )
+    private val mutableState = combine(
+        textsStream,
+        totalTextCountStream,
+        testTextPreferences
+    ) { texts, totalTextCount, testTextPreferences ->
+        TextListContract.State(
+            textList = texts,
+            totalTextCount = totalTextCount,
+            preferenceText = testTextPreferences
         )
-
-
-    fun onInputChange(input: String) {
-        _inputState.value = input
     }
+    override val state: StateFlow<TextListContract.State> = mutableState.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000L),
+        TextListContract.State()
+    )
 
-    fun insertTextItem() {
-//        if (_inputState.value.isNotEmpty()) {
-//            viewModelScope.launch(Dispatchers.IO) {
-//                val textItem =
-//                    TextEntity(text = _inputState.value, date = Calendar.getInstance().timeInMillis)
-//
-//                if (textRepository.insertTextItem(textItem)) {
-//
-//                } else {
-//
-//                }
-//            }
-//        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-
-            championRepository.getAllChampions().asResult().onEach { result ->
-
-                when (result) {
-                    is Result.Error -> {
-                        Log.d("결과", result.exception.toString())
-                    }
-                    Result.Loading -> {
-                        Log.d("결과", "Loading")
-                    }
-                    is Result.Success -> {
-                        Log.d("결과", result.data.toString())
-                    }
-                }
-            }.launchIn(this)
+    override fun event(event: TextListContract.Event) {
+        when (event) {
+            is TextListContract.Event.InsertTextItem -> insertTextItem(event.text)
+            is TextListContract.Event.DeleteTextEntity -> removeTextItem(event.textEntity)
         }
     }
 
-    fun updateTestPreferences() {
-        if (_inputState.value.isNotEmpty()) {
+
+    private fun insertTextItem(text: String) {
+        if (text.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                textRepository.updateTestString(_inputState.value)
+                val textItem =
+                    TextEntity(text = text, date = Calendar.getInstance().timeInMillis)
+
+                if (textRepository.insertTextItem(textItem)) {
+
+                } else {
+
+                }
             }
+
+            updateTestPreferences(text)
+        }
+    }
+
+    private fun updateTestPreferences(text: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            textRepository.updateTestString(text)
         }
     }
 
@@ -132,28 +85,3 @@ class TextListViewModel @Inject constructor(
         }
     }
 }
-
-sealed interface TextUiState {
-    data class Success(val texts: List<TextEntity>) : TextUiState
-    object Error : TextUiState
-    object Loading : TextUiState
-}
-
-sealed interface TotalTextCountUiState {
-    data class Success(val totalCount: Int) : TotalTextCountUiState
-    object Error : TotalTextCountUiState
-    object Loading : TotalTextCountUiState
-}
-
-sealed interface TestPreferenceUiState {
-    data class Success(val text: String) : TestPreferenceUiState
-    object Error : TestPreferenceUiState
-    object Loading : TestPreferenceUiState
-}
-
-
-data class TextListScreenUiState(
-    val textUiState: TextUiState,
-    val totalTextCountUiState: TotalTextCountUiState,
-    val TestPreferenceUiState: TestPreferenceUiState
-)
