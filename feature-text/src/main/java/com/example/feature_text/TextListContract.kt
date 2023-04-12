@@ -1,6 +1,6 @@
 package com.example.feature_text
 
-import com.example.core_common.UnidirectionalViewModel
+import com.example.common.UnidirectionalViewModel
 import com.example.core_database.room.entity.TextEntity
 
 interface TextListContract :

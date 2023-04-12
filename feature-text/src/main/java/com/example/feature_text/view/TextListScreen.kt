@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.core_common.use
+import com.example.common.use
 import com.example.core_database.room.entity.TextEntity
 import com.example.feature_text.TextListContract
 import com.example.feature_text.TextListViewModel
