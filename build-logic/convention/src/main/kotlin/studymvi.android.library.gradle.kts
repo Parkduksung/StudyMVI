@@ -1,8 +1,8 @@
 import com.example.studymvi.configureKotlinAndroid
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.library")
+    kotlin("android")
 }
 
 android {

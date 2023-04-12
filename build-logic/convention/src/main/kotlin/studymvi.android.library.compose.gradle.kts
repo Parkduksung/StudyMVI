@@ -1,7 +1,7 @@
 import com.example.studymvi.configureAndroidCompose
 
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.android.library")
 }
 
 android {
