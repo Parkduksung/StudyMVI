@@ -1,4 +1,4 @@
-package com.example.core_common
+package com.example.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
