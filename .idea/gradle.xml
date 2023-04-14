@@ -27,16 +27,22 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/common/base" />
+            <option value="$PROJECT_DIR$/common/model" />
+            <option value="$PROJECT_DIR$/common/navigation" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/core-data" />
-            <option value="$PROJECT_DIR$/core-database" />
-            <option value="$PROJECT_DIR$/core-datastore" />
-            <option value="$PROJECT_DIR$/core-domain" />
-            <option value="$PROJECT_DIR$/core-model" />
-            <option value="$PROJECT_DIR$/core-network" />
-            <option value="$PROJECT_DIR$/core-ui" />
-            <option value="$PROJECT_DIR$/core/common" />
-            <option value="$PROJECT_DIR$/feature-text" />
+            <option value="$PROJECT_DIR$/core/base" />
+            <option value="$PROJECT_DIR$/core/data" />
+            <option value="$PROJECT_DIR$/core/database" />
+            <option value="$PROJECT_DIR$/core/database/datastore" />
+            <option value="$PROJECT_DIR$/core/database/room" />
+            <option value="$PROJECT_DIR$/core/domain" />
+            <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/model" />
+            <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/designsystem" />
+            <option value="$PROJECT_DIR$/ui/text" />
           </set>
         </option>
       </GradleProjectSettings>

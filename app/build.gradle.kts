@@ -1,19 +1,16 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt.gradle)
+    id("studymvi.android.application")
+    id("studymvi.android.application.compose")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.example.studymvi"
-    compileSdk = 32
 
     defaultConfig {
         applicationId = "com.example.studymvi"
-        minSdk = 21
-        targetSdk = 32
         versionCode = 1
         versionName = "1.0"
 
@@ -65,45 +62,20 @@ android {
 
 dependencies {
 
-    implementation(project(":core-ui"))
-    implementation(project(":core-model"))
-    implementation(project(":feature-text"))
+    implementation(project(":ui:text"))
+    implementation(project(":ui:designsystem"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+    implementation(project(":common:base"))
+    implementation(project(":common:navigation"))
 
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
-
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
-
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material)
-
-    debugImplementation(libs.androidx.compose.ui.tooling)
-
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-
-
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.runner)
-
-    implementation("com.squareup.moshi:moshi-kotlin:1.12.0",)
-    implementation("com.squareup.moshi:moshi-kotlin-codegen:1.12.0",)
+    api(libs.androidx.navigation.compose)
 }
