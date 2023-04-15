@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class InsertTextUseCase @Inject constructor(private val textRepository: TextRepository) {
 
-    operator fun invoke(text: Text): Flow<Boolean> = flow {
-        emit(textRepository.insertTextItem(text))
-    }
+    operator fun invoke(text: Text): Flow<Boolean> =
+        flow { emit(textRepository.insertTextItem(text) > 0L) }
 }
